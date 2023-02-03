@@ -149,7 +149,7 @@ class DownloadCounter:
         }
 
     def has_downloads(self):
-        for _, v in self.as_dict().items():
+        for v in self.as_dict().values():
             if v > 0:
                 return True
 
@@ -689,7 +689,7 @@ async def cli(session, api_client, **params):
     asins = params.get("asin")
     titles = params.get("title")
     if get_all and (asins or titles):
-        logger.error(f"Do not mix *asin* or *title* option with *all* option.")
+        logger.error("Do not mix *asin* or *title* option with *all* option.")
         click.Abort()
 
     # what to download
