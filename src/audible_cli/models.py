@@ -597,6 +597,17 @@ class Library(BaseList):
         for i in podcast_items:
             self.data.extend(i.data)
 
+    async def resolve_podcats(
+            self,
+            start_date: Optional[datetime] = None,
+            end_date: Optional[datetime] = None
+    ):
+        print(
+            "'Library.resolve_podcats' is renamed to 'Library.resolve_podcasts' "
+            "and will be removed soon."
+        )
+        return await self.resolve_podcasts(start_date, end_date)
+
 
 class Catalog(BaseList):
     def _prepare_data(self, data: Union[dict, list]) -> list:
