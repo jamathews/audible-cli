@@ -719,6 +719,10 @@ async def cli(session, api_client, **params):
             f"Selected end date: {end_date.strftime('%Y-%m-%dT%H:%M:%S.%fZ')}"
         )
 
+    if ignore_podcasts and resolve_podcasts:
+        logger.error("Do not mix *ignore-podcasts* with *resolve-podcasts* option.")
+        raise click.Abort()
+
     filename_mode = params.get("filename_mode")
     if filename_mode == "config":
         filename_mode = session.config.get_profile_option(
