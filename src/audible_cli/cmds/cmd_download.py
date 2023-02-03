@@ -417,10 +417,13 @@ async def download_aaxc(
 
 
 async def consume(queue, ignore_errors):
-    while True:
-        item = await queue.get()
+    while not queue.empty():
+        func, kwargs = await queue.get()
         try:
-            await item
+            await func(**kwargs)
+        except asyncio.CancelledError as msg:
+            echo(msg)
+            break
         except Exception as e:
             logger.error(e)
             if not ignore_errors:
@@ -451,70 +454,88 @@ def queue_job(
     if get_cover:
         for cover_size in cover_sizes:
             queue.put_nowait(
-                download_cover(
-                    client=client,
-                    output_dir=output_dir,
-                    base_filename=base_filename,
-                    item=item,
-                    res=cover_size,
-                    overwrite_existing=overwrite_existing
+                (
+                    download_cover,
+                    dict(
+                        client=client,
+                        output_dir=output_dir,
+                        base_filename=base_filename,
+                        item=item,
+                        res=cover_size,
+                        overwrite_existing=overwrite_existing
+                    )
                 )
             )
 
     if get_pdf:
         queue.put_nowait(
-            download_pdf(
-                client=client,
-                output_dir=output_dir,
-                base_filename=base_filename,
-                item=item,
-                overwrite_existing=overwrite_existing
+            (
+                download_pdf,
+                dict(
+                    client=client,
+                    output_dir=output_dir,
+                    base_filename=base_filename,
+                    item=item,
+                    overwrite_existing=overwrite_existing
+                )
             )
         )
 
     if get_chapters:
         queue.put_nowait(
-            download_chapters(
-                output_dir=output_dir,
-                base_filename=base_filename,
-                item=item,
-                quality=quality,
-                overwrite_existing=overwrite_existing
+            (
+                download_chapters,
+                dict(
+                    output_dir=output_dir,
+                    base_filename=base_filename,
+                    item=item,
+                    quality=quality,
+                    overwrite_existing=overwrite_existing
+                )
             )
         )
 
     if get_annotation:
         queue.put_nowait(
-            download_annotations(
-                output_dir=output_dir,
-                base_filename=base_filename,
-                item=item,
-                overwrite_existing=overwrite_existing
+            (
+                download_annotations,
+                dict(
+                    output_dir=output_dir,
+                    base_filename=base_filename,
+                    item=item,
+                    overwrite_existing=overwrite_existing
+                )
             )
         )
 
     if get_aax:
         queue.put_nowait(
-            download_aax(
-                client=client,
-                output_dir=output_dir,
-                base_filename=base_filename,
-                item=item,
-                quality=quality,
-                overwrite_existing=overwrite_existing,
-                aax_fallback=aax_fallback
+            (
+                download_aax,
+                dict(
+                    client=client,
+                    output_dir=output_dir,
+                    base_filename=base_filename,
+                    item=item,
+                    quality=quality,
+                    overwrite_existing=overwrite_existing,
+                    aax_fallback=aax_fallback
+                )
             )
         )
 
     if get_aaxc:
         queue.put_nowait(
-            download_aaxc(
-                client=client,
-                output_dir=output_dir,
-                base_filename=base_filename,
-                item=item,
-                quality=quality,
-                overwrite_existing=overwrite_existing
+            (
+                download_aaxc,
+                dict(
+                    client=client,
+                    output_dir=output_dir,
+                    base_filename=base_filename,
+                    item=item,
+                    quality=quality,
+                    overwrite_existing=overwrite_existing
+                )
             )
         )
 
