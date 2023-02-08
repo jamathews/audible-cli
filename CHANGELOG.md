@@ -6,7 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## Unreleased
 
--
+### Changed
+
+- `—-ignore-podcasts` option of `download` command now removes podcast parents from list to proceed
+- `—-ignore-podcasts` option and `—-resolve-podcasts` option of `download` command are now mutually exclusive
+- rename `models.Library.resolve_podcats` to `resolve_podcasts`
+- rework download queue of `download` command to prevent not awaited coroutine exception at command abort
 
 ## [0.2.4] - 2022-09-21
 
