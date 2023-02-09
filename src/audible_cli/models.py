@@ -399,7 +399,7 @@ class LibraryItem(BaseItem):
         return metadata
 
     async def get_annotations(self):
-        url = f"https://cde-ta-g7g.amazon.com/FionaCDEServiceEngine/sidecar"
+        url = "https://cde-ta-g7g.amazon.com/FionaCDEServiceEngine/sidecar"
         params = {
             "type": "AUDI",
             "key": self.asin
