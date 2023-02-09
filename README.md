@@ -6,7 +6,7 @@ Both are written with Python.
 
 ## Requirements
 
-audible-cli needs at least *Python 3.6* and *Audible v0.6.0*.
+audible-cli needs at least *Python 3.7* and *Audible v0.8.2*.
 
 It depends on the following packages:
 
@@ -36,6 +36,8 @@ or install it directly from GitHub with
 
 git clone https://github.com/mkb79/audible-cli.git
 cd audible-cli
+poetry install
+# if poetry is not available you can use this
 pip install .
 
 ```
@@ -71,13 +73,13 @@ You can create them yourself this way
 
 git clone https://github.com/mkb79/audible-cli.git
 cd audible-cli
-pip install .[pyi]
+poetry install
 
 # onefile output
-pyinstaller --clean -F --hidden-import audible_cli -n audible -c pyi_entrypoint
+poetry run pyinstaller --clean audible-filemode.spec
 
 # onedir output
-pyinstaller --clean -D --hidden-import audible_cli -n audible -c pyi_entrypoint
+poetry run pyinstaller --clean audible-dirmode.spec
 ```
 
 ### Hints
@@ -144,6 +146,7 @@ an option must be entered with a dash.
 #### APP section
 
 The APP section supports the following options:
+
 - primary_profile: The profile to use, if no other is specified
 - filename_mode: When using the `download` command, a filename mode can be 
   specified here. If not present, "ascii" will be used as default. To override
