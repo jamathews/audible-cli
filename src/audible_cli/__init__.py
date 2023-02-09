@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 
+__version__ = "0.2.4"
+
+
 from ._logging import log_helper
-from ._version import __version__
 from .cli import main, quickstart
 
 
