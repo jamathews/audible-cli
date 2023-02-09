@@ -37,7 +37,8 @@ MANIFEST
 #  before PyInstaller builds the exe, so as to inject date/other infos into it.
 *.manifest
 *.spec
-!audible.spec
+!audible-dirmode.spec
+!audible-filemode.spec
 
 # Installer logs
 pip-log.txt
