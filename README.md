@@ -2,27 +2,23 @@
 
 **audible-cli** is a command line interface for the 
 [Audible](https://github.com/mkb79/Audible) package. 
-Both are written with Python.
+Both are written in Python language.
 
 ## Requirements
 
-audible-cli needs at least *Python 3.7* and *Audible v0.8.2*.
-
-It depends on the following packages:
-
-* aiofiles
-* audible
-* click
-* colorama (on Windows machines)
-* httpx
-* Pillow
-* tabulate
-* toml
-* tqdm
+audible-cli needs at least *Python 3.7*.
 
 ## Installation
 
-You can install audible-cli from pypi with
+The preferred way to install this package is by using [pipx](https://pypa.github.io/pipx/):
+
+```shell
+
+pipx install audible-cli
+
+```
+
+If pipx is not available `pip` can be used instead:
 
 ```shell
 
@@ -30,23 +26,11 @@ pip install audible-cli
 
 ```
 
-or install it directly from GitHub with
-
-```shell
-
-git clone https://github.com/mkb79/audible-cli.git
-cd audible-cli
-poetry install
-# if poetry is not available you can use this
-pip install .
-
-```
-
 ## Standalone executables
 
-If you don't want to install `Python` and `audible-cli` on your machine, you can
-find standalone exe files below or on the [releases](https://github.com/mkb79/audible-cli/releases) 
-page (including beta releases). At this moment Windows, Linux and macOS are supported.
+If `Python>=3.7` is not available on the machine, standalone binaries can be found 
+below or on the [releases](https://github.com/mkb79/audible-cli/releases) page 
+(including beta releases). At this moment Windows, Linux and macOS are supported.
 
 ### Links
 
@@ -63,11 +47,13 @@ page (including beta releases). At this moment Windows, Linux and macOS are supp
     - [Windows onefile](https://github.com/mkb79/audible-cli/releases/latest/download/audible_win.zip)
     - [Windows onedir](https://github.com/mkb79/audible-cli/releases/latest/download/audible_win_dir.zip)
 
-On every execution, the binary code must be extracted. On Windows machines this can result in a long start time. If you use `audible-cli` often, I would prefer the `directory` package for Windows!
+> The code of onfile binaries is extracted on every execution. This can result in a long start 
+> time, especially on Windows machines. Using the onedir binaries is the preferred way in that cases.
 
-### Creating executables on your own
 
-You can create them yourself this way
+### Creating standalone binary
+
+A standalone binary can be creates this way:
 
 ```shell
 
@@ -80,12 +66,30 @@ poetry run pyinstaller --clean audible-filemode.spec
 
 # onedir output
 poetry run pyinstaller --clean audible-dirmode.spec
+
 ```
 
-### Hints
+> There are some limitations when using plugins. The binary does not contain
+> all the dependencies from your plugin script. 
 
-There are some limitations when using plugins. The binary maybe does not contain
-all the dependencies from your plugin script. 
+## Getting started
+
+A config and auth file must be created first before using the `audible` command. The easiest way 
+is by using the interactive `audible-quickstart` or `audible quickstart` command.
+
+> The quickstart command verifies that there are no config file already present. 
+> So this command can only be run once.
+
+To add another Audible account these steps have to be followed:
+
+   1. add a new auth file: `audible manage auth-file add`
+   2. add a new profile: `audible manage profile add`
+
+> One auth file per Audible account is sufficient.
+> A profile connects an existing auth file with a specific Audible marketplace.
+
+To add another marketplace to an existing auth file the command `audible manage profile add` 
+must be used.
 
 ## Tab Completion
 
@@ -93,12 +97,19 @@ Tab completion can be provided for commands, options and choice values. Bash,
 Zsh and Fish are supported. More information can be found 
 [here](https://github.com/mkb79/audible-cli/tree/master/utils/code_completion).
 
-
 ## Basic information
+
+### Way of working
+
+This package simulate an iOS Audible device to interact with the non publicly Audible API. 
+The information and credentials for each simulated device is stored in an (optionally encrypted) 
+auth file. Devices, created this way, can be used for every available Audible marketplace. For 
+this reason, one auth file per Audible account is sufficient. A profile connects an existing 
+auth file with a specific Audible marketplace
 
 ### App dir
 
-audible-cli use an app dir where it expects all necessary files.
+audible-cli use an app dir where it search for all necessary files.
 
 If the ``AUDIBLE_CONFIG_DIR`` environment variable is set, it uses the value 
 as config dir. Otherwise, it will use a folder depending on the operating 
@@ -120,28 +131,27 @@ named ``profile.<profile_name>``
 
 ### profiles
 
-audible-cli make use of profiles. Each profile contains the name of the 
-corresponding auth file and the country code for the audible marketplace. If 
-you have audiobooks on multiple marketplaces, you have to create a profile for 
-each one with the same auth file.
+audible-cli make use of profiles. Each profile contains at least the name of the 
+corresponding auth file and the country code for the audible marketplace. For 
+using multiple marketplaces, a profile for each marketplace file must be created. 
+In that case, the auth file entry can be the same.
 
 In the main section of the config file, a primary profile is defined. 
-This profile is used, if no other is specified. You can call 
-`audible -P PROFILE_NAME`, to select another profile.
+This profile is used, if no other is specified. Another profile can be 
+selected with `audible -P PROFILE_NAME`.
 
 ### auth files
 
-Like the config file, auth files are stored in the config dir too. If you 
-protected your auth file with a password call `audible -p PASSWORD`, to 
-provide the password.
+Like the config file, auth files are stored in the app dir. 
 
-If the auth file is encrypted, and you don’t provide the password, you will be 
-asked for it with a „hidden“ input field. 
+For password protected auth files the password can be provided with 
+`audible -p PASSWORD`. If the password is missed, a „hidden“ input field will
+appear.
 
 ### Config options
 
-An option in the config file is separated by an underline. In the CLI prompt,
-an option must be entered with a dash.
+A multi-word option in the config file is separated by an underline. In the CLI prompt,
+a multi-word option must be entered with a hyphen.
 
 #### APP section
 
@@ -158,20 +168,6 @@ The APP section supports the following options:
 - auth_file: The auth file for this profile
 - country_code: The marketplace for this profile
 - filename_mode: See APP section above. Will override the option in APP section.
-
-## Getting started
-
-Use the `audible-quickstart` or `audible quickstart` command in your shell 
-to create your first config, profile and auth file. `audible-quickstart` 
-runs on the interactive mode, so you have to answer multiple questions to finish.
-
-If you have used `audible quickstart` and want to add a second profile, you need to first create a new authfile and then update your config.toml file.
-
-So the correct order is:
-
-   1. add a new auth file using your second account using `audible manage auth-file add`
-   2. add a new profile to your config and use the second auth file using `audible manage profile add`
-
 
 ## Commands
 
@@ -247,6 +243,9 @@ sys.path.insert(0, str(pathlib.Path(__file__).parent))
 Examples can be found 
 [here](https://github.com/mkb79/audible-cli/tree/master/plugin_cmds).
 
+If the plugin command imports a package which is not provided by this package 
+it is recommended to install `audible-cli` with `pipx` and inject the additional 
+package with `pipx inject audible_cli {PACKAGE}`.
 
 ## Own Plugin Packages
 
