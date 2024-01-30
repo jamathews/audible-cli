@@ -39,7 +39,7 @@ CLIENT_HEADERS = {
     "User-Agent": "Audible/671 CFNetwork/1240.0.4 Darwin/20.6.0"
 }
 
-QUEUE = asyncio.Queue()
+QUEUE = None
 
 
 class DownloadCounter:
@@ -868,6 +868,10 @@ async def cli(session, api_client, **params):
             logger.error(
                 f"Skip title {title}: Not found in library"
             )
+
+    # set queue
+    global QUEUE
+    QUEUE = asyncio.Queue()
 
     for job in jobs:
         item = library.get_item_by_asin(job)
