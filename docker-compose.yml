@@ -9,3 +9,4 @@ services:
         volumes:
             - '${DOWNLOADS}:/downloads'
             - '${PROFILE}:/home/audible-cli/.audible'
+

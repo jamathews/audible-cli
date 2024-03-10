@@ -1,10 +1,12 @@
 #!/usr/bin/env bash
 source .env
 
+cd /downloads
+
 while true
 do
 	echo "$(date) Downloading"
-	audible download --all --aax-fallback --output-dir /downloads
+	audible download --all --aax-fallback --jobs 8 --output-dir /downloads
 
 	echo "$(date) Converting"
 	./convert.sh
