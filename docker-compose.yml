@@ -1,0 +1,11 @@
+version: '3.3'
+services:
+    audible-cli:
+        build:
+          context: .
+          args:
+            - 'DOCKER_UID=${DOCKER_UID}'
+        container_name: audible-cli
+        volumes:
+            - '${DOWNLOADS}:/downloads'
+            - '${PROFILE}:/home/audible-cli/.audible'
