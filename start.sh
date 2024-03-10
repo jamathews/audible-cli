@@ -9,7 +9,7 @@ do
 	audible download --all --aax-fallback --jobs 8 --output-dir /downloads
 
 	echo "$(date) Converting"
-	./convert.sh
+	/audible-cli/convert.sh
 
 	echo "$(date) Sleeping for ${LOOP_DURATION} seconds"
 	sleep "${LOOP_DURATION}"
